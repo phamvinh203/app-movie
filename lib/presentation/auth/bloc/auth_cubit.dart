@@ -34,7 +34,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       result.fold(
         (error) {
-          emit(AuthFailure(errorMessage: error));
+          emit(AuthFailure(errorMessage: error.message));
         },
         (success) {
           emit(
@@ -69,7 +69,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       result.fold(
         (error) {
-          emit(AuthFailure(errorMessage: error));
+          emit(AuthFailure(errorMessage: error.message));
         },
         (success) {
           emit(AuthSuccess(message: 'Đăng nhập thành công!'));

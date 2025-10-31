@@ -5,10 +5,11 @@ import 'package:app_movie/domain/auth/repositories/auth.dart';
 import 'package:app_movie/service_locator.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:app_movie/core/error/failure.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
   @override
-  Future<Either> signUp(SignupReqParams params) async {
+  Future<Either<Failure, User>> signUp(SignupReqParams params) async {
     try {
       var user = await sl<AuthApiService>().signUp(
         params.email,
@@ -16,12 +17,12 @@ class AuthRepositoryImpl extends AuthRepository {
       );
       return Right(user);
     } catch (e) {
-      return Left(e.toString());
+      return Left(GeneralFailure(e.toString()));
     }
   }
 
   @override
-  Future<Either> signIn(SigninReqParams params) async {
+  Future<Either<Failure, User>> signIn(SigninReqParams params) async {
     try {
       var user = await sl<AuthApiService>().signIn(
         params.email,
@@ -29,17 +30,17 @@ class AuthRepositoryImpl extends AuthRepository {
       );
       return Right(user);
     } catch (e) {
-      return Left(e.toString());
+      return Left(GeneralFailure(e.toString()));
     }
   }
 
   @override
-  Future<Either> signOut() async {
+  Future<Either<Failure, String>> signOut() async {
     try {
       await sl<AuthApiService>().signOut();
       return const Right('Signed out successfully');
     } catch (e) {
-      return Left(e.toString());
+      return Left(GeneralFailure(e.toString()));
     }
   }
 

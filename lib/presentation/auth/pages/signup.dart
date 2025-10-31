@@ -1,3 +1,4 @@
+import 'package:app_movie/common/helper/message/display_message.dart';
 import 'package:app_movie/common/helper/navigation/app_navigation.dart';
 import 'package:app_movie/core/configs/theme/app_colors.dart';
 import 'package:app_movie/data/auth/models/signup_req_params.dart';
@@ -31,23 +32,13 @@ class _SignupPageState extends State<SignupPage> {
       child: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.green,
-              ),
-            );
+            DisplayMessage.successMessage(state.message, context);
             // Navigate to sign in page after successful signup
             Future.delayed(const Duration(seconds: 1), () {
               AppNavigator.pushReplacement(context, const SigninPage());
             });
           } else if (state is AuthFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage),
-                backgroundColor: Colors.red,
-              ),
-            );
+            DisplayMessage.errorMessage(state.errorMessage, context);
           }
         },
         builder: (context, state) {
