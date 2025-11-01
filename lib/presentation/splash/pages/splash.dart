@@ -1,7 +1,7 @@
 import 'package:app_movie/common/helper/navigation/app_navigation.dart';
 import 'package:app_movie/core/configs/assets/app_images.dart';
 import 'package:app_movie/presentation/auth/pages/signin.dart';
-import 'package:app_movie/presentation/home/pages/home.dart';
+import 'package:app_movie/presentation/main/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,7 +19,7 @@ class SplashPage extends StatelessWidget {
           if (state is UnAuthenticated) {
             AppNavigator.pushReplacement(context, const SigninPage());
           } else if (state is Authenticated) {
-            AppNavigator.pushReplacement(context, const HomePage());
+            AppNavigator.pushReplacement(context, const MainPage());
           }
         },
         child: Stack(
