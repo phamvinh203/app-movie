@@ -14,10 +14,12 @@ class MovieRepositoryImpl extends MovieRepository {
         return Left(error);
       },
       (data) {
-        var movies = List.from(data['items'])
-            .map((item) => MovieMapper.toEntity(MovieModel.fromJson(item)))
-            .toList();
-        return Right(movies);
+        // Parse the entire API response (status, msg, items, pagination) into MovieModel
+        var movieModel = MovieModel.fromJson(data);
+        // Map the model to entity
+        var movie = MovieMapper.toEntity(movieModel);
+        // Return a list containing the single movie entity (because TrendingState expects List<MovieEntity>)
+        return Right([movie]);
       },
     );
   }
