@@ -4,7 +4,7 @@ import 'package:app_movie/core/configs/theme/app_colors.dart';
 import 'package:app_movie/data/auth/models/signin_req_params.dart';
 import 'package:app_movie/presentation/auth/bloc/auth_cubit.dart';
 import 'package:app_movie/presentation/auth/bloc/auth_state.dart';
-import 'package:app_movie/presentation/home/pages/home.dart';
+import 'package:app_movie/presentation/main/main_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,7 +34,7 @@ class _SigninPageState extends State<SigninPage> {
             DisplayMessage.successMessage(state.message, context);
             // Navigate to home page after successful sign in
             Future.delayed(const Duration(seconds: 1), () {
-              AppNavigator.pushAndRemove(context, const HomePage());
+              AppNavigator.pushAndRemove(context, const MainPage());
             });
           } else if (state is AuthFailure) {
             DisplayMessage.errorMessage(state.errorMessage, context);
