@@ -5,7 +5,7 @@ import 'package:app_movie/data/movie/repositories/movie.dart';
 import 'package:app_movie/data/movie/sources/movie.dart';
 import 'package:app_movie/domain/auth/repositories/auth.dart';
 import 'package:app_movie/domain/movie/repositories/movie.dart';
-import 'package:app_movie/domain/movie/usecases/get_trending_movies.dart';
+import 'package:app_movie/domain/movie/usecases/get_banner_movies.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -23,5 +23,6 @@ void setupServiceLocator() {
   sl.registerSingleton<MovieRepository>(MovieRepositoryImpl());
 
   // Use Cases
-  sl.registerSingleton<GetTrendingMoviesUseCase>(GetTrendingMoviesUseCase());
+  sl.registerSingleton<GetBannerMoviesUseCase>(GetBannerMoviesUseCase());
+
 }

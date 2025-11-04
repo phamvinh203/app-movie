@@ -1,5 +1,5 @@
-import 'package:app_movie/presentation/home/widget/trending_movies.dart';
-import 'package:app_movie/presentation/home/widget/trending_movie_text.dart';
+
+import 'package:app_movie/presentation/home/widget/banner_movies.dart';
 import 'package:flutter/material.dart';
 import 'package:app_movie/core/configs/theme/app_colors.dart';
 
@@ -44,7 +44,10 @@ class _HomeTabState extends State<HomeTab> {
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [TrendingText(), TrendingMovies()],
+          children: [
+            BannerMovies(),
+            // TrendingMovie(),
+          ],
         ),
       ),
     );

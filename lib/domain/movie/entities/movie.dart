@@ -15,6 +15,7 @@ class MovieEntity {
 class MovieItemEntity {
   final String? id;
   final String? name;
+  final String? slug;
   final String? originName;
   final String? posterUrl;
   final String? thumbUrl;
@@ -26,6 +27,7 @@ class MovieItemEntity {
   MovieItemEntity({
     required this.id,
     required this.name,
+    this.slug,
     required this.originName,
     required this.posterUrl,
     required this.thumbUrl,

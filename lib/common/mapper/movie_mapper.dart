@@ -17,6 +17,7 @@ class MovieMapper {
     return MovieItemEntity(
       id: item.id,
       name: item.name,
+      slug: item.slug,
       originName: item.originName,
       posterUrl: item.posterUrl,
       thumbUrl: item.thumbUrl,

@@ -7,20 +7,21 @@ import 'package:dartz/dartz.dart';
 
 class MovieRepositoryImpl extends MovieRepository {
   @override
-  Future<Either> getTrendingMovies() async {
-    var result = await sl<MovieService>().getTrendingMovies();
+  Future<Either> getBannerMovies() async {
+    var result = await sl<MovieService>().getBannerMovies();
     return result.fold(
       (error) {
         return Left(error);
       },
       (data) {
-        // Parse the entire API response (status, msg, items, pagination) into MovieModel
+
         var movieModel = MovieModel.fromJson(data);
         // Map the model to entity
         var movie = MovieMapper.toEntity(movieModel);
-        // Return a list containing the single movie entity (because TrendingState expects List<MovieEntity>)
         return Right([movie]);
       },
     );
   }
+  
+  
 }
