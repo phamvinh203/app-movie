@@ -3,10 +3,12 @@ import 'package:app_movie/domain/movie/repositories/movie.dart';
 import 'package:app_movie/service_locator.dart';
 import 'package:dartz/dartz.dart';
 
-class GetTrendingMoviesUseCase extends UseCase<Either, dynamic>{
+class GetBannerMoviesUseCase extends UseCase<Either, int>{
 
   @override
-  Future<Either> call({params}) async {
-    return await sl<MovieRepository>().getTrendingMovies();
+  Future<Either> call({int? params}) async {
+    final page = params ?? 1;
+    return await sl<MovieRepository>().getBannerMovies(page: page);
   }
 }
+

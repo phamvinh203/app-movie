@@ -5,16 +5,25 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 abstract class MovieService {
-  Future<Either> getTrendingMovies();
+  Future<Either> getBannerMovies({int page = 1});
+  Future<Either> getHotMovies({int page = 1});
 }
 
 class MovieApiServiceImpl extends MovieService {
   @override
-  Future<Either> getTrendingMovies() async{
+  Future<Either> getBannerMovies({int page = 1}) async {
     try {
-      var response = await sl<DioClient>().get(
-        ApiUrl.latestMovies,
-      );
+      final response = await sl<DioClient>().get('${ApiUrl.bannerMovies}?page=$page');
+      return Right(response.data);
+    } on DioException catch (e) {
+      return Left(e.message);
+    }
+  }
+
+  @override
+  Future<Either> getHotMovies({int page = 1}) async {
+    try {
+      final response = await sl<DioClient>().get('${ApiUrl.hotMovies}?page=$page');
       return Right(response.data);
     } on DioException catch (e) {
       return Left(e.message);
