@@ -1,3 +1,4 @@
+import 'package:app_movie/core/constants/api_url.dart';
 import 'package:app_movie/domain/movie/entities/movie.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +7,7 @@ class MovieCard extends StatelessWidget {
   final VoidCallback? onTap;
   final double width;
   final double height;
+  final int? index;
 
   const MovieCard({
     super.key,
@@ -13,6 +15,7 @@ class MovieCard extends StatelessWidget {
     this.onTap,
     this.width = 160,
     this.height = 320,
+    this.index,
   });
 
   @override
@@ -75,7 +78,7 @@ class MovieCard extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Image.network(
-            movie.posterUrl ?? '',
+            ApiUrl.getImageUrl(movie.posterUrl),
             width: width,
             height: posterHeight,
             fit: BoxFit.cover,
@@ -96,18 +99,56 @@ class MovieCard extends StatelessWidget {
         ),
 
         // Quality badge (góc trên trái)
-        if (movie.quality != null && movie.quality!.isNotEmpty)
+        // if (movie.quality != null && movie.quality!.isNotEmpty)
+        //   Positioned(
+        //     top: 8,
+        //     left: 20,
+        //     child: _buildBadge(
+        //       text: movie.quality!,
+        //       backgroundColor: Colors.black.withOpacity(0.7),
+        //       textColor: Colors.amber,
+        //       fontSize: 11,
+        //     ),
+        //   ),
+
+        // Number badge (góc trái trên cùng)
+        if (index != null)
           Positioned(
-            top: 8,
-            left: 8,
-            child: _buildBadge(
-              text: movie.quality!,
-              backgroundColor: Colors.black.withOpacity(0.7),
-              textColor: Colors.amber,
-              fontSize: 11,
+            top: 0,
+            left: 0,
+            child: Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Colors.red.shade600, Colors.red.shade800],
+                ),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 4,
+                    offset: const Offset(2, 2),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  '${index! + 1}', // +1 để bắt đầu từ 1 thay vì 0
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
           ),
-
         // Episode badge (góc trên phải)
         if (movie.episodeCurrent != null && movie.episodeCurrent!.isNotEmpty)
           Positioned(

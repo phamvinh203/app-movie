@@ -69,4 +69,14 @@ class MovieHelper {
 
     return allMovies.take(limit).toList();
   }
+
+  /// 🎥 Lấy danh sách phim 
+  static List<MovieItemEntity> getAllMovies(
+    List<MovieEntity> pages, {
+    int limit = 10,
+  }) {
+    final allMovies = mergeMovies(pages);
+
+    return allMovies.take(limit).toList();
+  }
 }

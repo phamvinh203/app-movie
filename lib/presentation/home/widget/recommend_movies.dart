@@ -1,55 +1,55 @@
 import 'package:app_movie/common/helper/movie_helper.dart';
-import 'package:app_movie/presentation/home/bloc/hot_cubit.dart';
-import 'package:app_movie/presentation/home/bloc/hot_state.dart';
+import 'package:app_movie/presentation/home/bloc/movie_cubit.dart';
+import 'package:app_movie/presentation/home/bloc/movie_state.dart';
 import 'package:app_movie/presentation/home/widget/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HotMovies extends StatelessWidget {
-  const HotMovies({super.key});
+class RecommendMovies extends StatelessWidget {
+  const RecommendMovies({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HotCubit()..getHotMovies(),
-      child: BlocBuilder<HotCubit, HotState>(
+      create: (context) => MoviesCubit()..getMovies(),
+      child: BlocBuilder<MoviesCubit, MoviesState>(
         builder: (context, state) {
-          if (state is HotMoviesLoading) {
+          if (state is MoviesLoading) {
             return const SizedBox(
               height: 250,
               child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
             );
           }
 
-          if (state is HotMoviesLoaded) {
-            final hotMovies = MovieHelper.getHotMovies(state.movies, limit: 10);
+          if (state is MoviesLoaded) {
+            final recommendMovies = MovieHelper.getAllMovies(
+              state.movies,
+              limit: 10,
+            );
 
-            if (hotMovies.isEmpty) {
-              return const Center(child: Text("Không có phim nổi bật."));
+            if (recommendMovies.isEmpty) {
+              return const Center(child: Text("Không có phim đề xuất."));
             }
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 🔥 Tiêu đề
+                // 🎬 Tiêu đề
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
-                        children: const [
+                        children: [
                           Icon(
-                            Icons.local_fire_department,
-                            color: Colors.redAccent,
+                            Icons.recommend,
+                            color: Colors.blueAccent,
                             size: 26,
                           ),
                           SizedBox(width: 6),
                           Text(
-                            'Đề xuất Hot',
+                            'Đề xuất cho bạn',
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -63,7 +63,7 @@ class HotMovies extends StatelessWidget {
                           debugPrint('Xem thêm phim hot');
                           // TODO: điều hướng tới màn hình danh sách phim hot
                         },
-                        child: const Text(
+                        child: Text(
                           'Xem thêm',
                           style: TextStyle(
                             fontSize: 16,
@@ -76,25 +76,24 @@ class HotMovies extends StatelessWidget {
                   ),
                 ),
 
-                // Danh sách phim
+                //  Danh sách phim đề xuất
                 SizedBox(
-                  height: 350,
+                  height: 250,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    itemCount: hotMovies.length,
+                    itemCount: recommendMovies.length,
                     itemBuilder: (context, index) {
-                      final item = hotMovies[index];
+                      final movie = recommendMovies[index];
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 6.0),
                         child: MovieCard(
-                          movie: item,
+                          movie: movie,
                           index: index,
-                          width: 160,
-                          height: 350,
+                          width: 140,
+                          height: 250,
                           onTap: () {
-                            // 👉 Sau này bạn có thể mở modal chi tiết phim ở đây
-                            debugPrint('Tapped on: ${item.name}');
+                            debugPrint('Tapped on: ${movie.name}');
                           },
                         ),
                       );
@@ -103,13 +102,11 @@ class HotMovies extends StatelessWidget {
                 ),
               ],
             );
+          } else {
+            return const Center(
+              child: Text("Đã xảy ra lỗi khi tải phim đề xuất."),
+            );
           }
-
-          if (state is FailureLoadHotMovies) {
-            return Center(child: Text('Lỗi: ${state.errorMessage}'));
-          }
-
-          return Container();
         },
       ),
     );
