@@ -1,5 +1,6 @@
 
 import 'package:app_movie/presentation/home/widget/banner_movies.dart';
+import 'package:app_movie/presentation/home/widget/hot_movie.dart';
 import 'package:flutter/material.dart';
 import 'package:app_movie/core/configs/theme/app_colors.dart';
 
@@ -46,7 +47,7 @@ class _HomeTabState extends State<HomeTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             BannerMovies(),
-            // TrendingMovie(),
+            HotMovies(),
           ],
         ),
       ),

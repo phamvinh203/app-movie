@@ -23,6 +23,12 @@ class MovieItemEntity {
   final String? type;
   final double? voteAverage;
   final int? voteCount;
+  final ModifiedEntity? modified;
+  final String? episodeCurrent;
+  final String? quality;
+  final String? lang;
+  final List<CategoryEntity> category;
+  final List<CategoryEntity> country;
 
   MovieItemEntity({
     required this.id,
@@ -35,7 +41,27 @@ class MovieItemEntity {
     required this.type,
     required this.voteAverage,
     required this.voteCount,
+    this.modified,
+    this.episodeCurrent,
+    this.quality,
+    this.lang,
+    this.category = const [],
+    this.country = const [],
   });
+}
+
+class CategoryEntity {
+  final String? id;
+  final String? name;
+  final String? slug;
+
+  CategoryEntity({required this.id, required this.name, required this.slug});
+}
+
+class ModifiedEntity {
+  final DateTime? time;
+
+  ModifiedEntity({required this.time});
 }
 
 class PaginationEntity {

@@ -25,6 +25,22 @@ class MovieMapper {
       type: item.tmdb?.type,
       voteAverage: item.tmdb?.voteAverage,
       voteCount: item.tmdb?.voteCount,
+      modified: item.modified != null
+          ? ModifiedEntity(time: item.modified!.time)
+          : null,
+      episodeCurrent: item.episodeCurrent,
+      quality: item.quality,
+      lang: item.lang,
+      category: item.category.map((cat) => _mapCategory(cat)).toList(),
+      country: item.country.map((country) => _mapCategory(country)).toList(),
+    );
+  }
+
+  static CategoryEntity _mapCategory(Category category) {
+    return CategoryEntity(
+      id: category.id,
+      name: category.name,
+      slug: category.slug,
     );
   }
 

@@ -6,14 +6,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class BannerCubit extends Cubit<BannerState> {
   BannerCubit() : super(BannerMoviesLoading());
 
-  void getBannerMovies() async {
-    var moviesData = await sl<GetBannerMoviesUseCase>().call();
+  int _page = 1;
+
+  void getBannerMovies({bool loadMore = false}) async {
+    if (!loadMore) emit(BannerMoviesLoading());
+    var moviesData = await sl<GetBannerMoviesUseCase>().call(params: _page);
     moviesData.fold(
-      (error) {
-        emit(FailureLoadBannerMovies(errorMessage: error.toString()));
-      },
+      (error) => emit(FailureLoadBannerMovies(errorMessage: error.toString())),
       (data) {
-        emit(BannerMoviesLoaded(movies: data));
+        if (loadMore && state is BannerMoviesLoaded) {
+          final current = (state as BannerMoviesLoaded).movies;
+          emit(BannerMoviesLoaded(movies: [...current, ...data]));
+        } else {
+          emit(BannerMoviesLoaded(movies: data));
+        }
+        _page++;
       },
     );
   }

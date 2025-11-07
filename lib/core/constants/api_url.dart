@@ -2,22 +2,13 @@ class ApiUrl {
   static const baseURL = 'https://phimapi.com/';
 
   // ==================== DANH SÁCH PHIM ====================
-  /// Phim mới cập nhật (V1)
-  /// GET https://phimapi.com/danh-sach/phim-moi-cap-nhat?page={page}
-  static const newMovies = 'danh-sach/phim-moi-cap-nhat';
-
-  /// Phim mới cập nhật V2
-  /// GET https://phimapi.com/danh-sach/phim-moi-cap-nhat-v2?page={page}
-  static const newMoviesV2 = 'danh-sach/phim-moi-cap-nhat-v2';
-
-  /// Phim mới cập nhật V3
   /// GET https://phimapi.com/danh-sach/phim-moi-cap-nhat-v3?page={page}
-  static const newMoviesV3 = 'danh-sach/phim-moi-cap-nhat-v3';
+  static const movie = 'danh-sach/phim-moi-cap-nhat-v3';
 
   // Legacy support
-  static const bannerMovies = newMovies;
-  static const trendingMovies = newMoviesV2;
-  static const latestMovies = newMoviesV3;
+  static const bannerMovies = movie;
+  static const hotMovies = movie;
+  static const latestMovies = movie;
 
   // ==================== PHIM & TẬP PHIM ====================
   /// Thông tin Phim & Danh sách tập phim

@@ -7,21 +7,31 @@ import 'package:dartz/dartz.dart';
 
 class MovieRepositoryImpl extends MovieRepository {
   @override
-  Future<Either> getBannerMovies() async {
-    var result = await sl<MovieService>().getBannerMovies();
+  Future<Either> getBannerMovies({int page = 1}) async {
+    var result = await sl<MovieService>().getBannerMovies(page: page);
     return result.fold(
-      (error) {
-        return Left(error);
-      },
+      (error) => Left(error),
       (data) {
-
-        var movieModel = MovieModel.fromJson(data);
+        final movieModel = MovieModel.fromJson(data);
         // Map the model to entity
-        var movie = MovieMapper.toEntity(movieModel);
+        final movie = MovieMapper.toEntity(movieModel);
         return Right([movie]);
       },
     );
   }
   
+  @override
+  Future<Either> getHotMovies({int page = 1}) async {
+    var result = await sl<MovieService>().getHotMovies(page: page);
+    return result.fold(
+      (error) => Left(error),
+      (data) {
+        final movieModel = MovieModel.fromJson(data);
+        // Map the model to entity
+        final movie = MovieMapper.toEntity(movieModel);
+        return Right([movie]);
+      },
+    );
+  }
   
 }
