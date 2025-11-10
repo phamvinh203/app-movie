@@ -22,7 +22,8 @@ class RecommendMovies extends StatelessWidget {
           }
 
           if (state is MoviesLoaded) {
-            final recommendMovies = MovieHelper.getAllMovies(
+            // Sử dụng helper để lọc & xử lý dữ liệu
+            final recommendMovies = MovieHelper.getRecommendMovies(
               state.movies,
               limit: 10,
             );

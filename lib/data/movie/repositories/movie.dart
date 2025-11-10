@@ -55,9 +55,7 @@ class MovieRepositoryImpl extends MovieRepository {
       // Parse items từ data
       final items = responseData['items'] ?? [];
 
-      final movieData = {
-        'items': items,
-      };
+      final movieData = {'items': items};
 
       final movieModel = MovieModel.fromJson(movieData);
       // Map the model to entity

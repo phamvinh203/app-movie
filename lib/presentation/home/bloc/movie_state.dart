@@ -5,7 +5,7 @@ abstract class MoviesState {}
 class MoviesLoading extends MoviesState {}
 
 class MoviesLoaded extends MoviesState {
-  final List<MovieEntity> movies;
+  final List<MovieItemEntity> movies;
   MoviesLoaded({required this.movies});
 }
 

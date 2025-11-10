@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:app_movie/core/constants/api_url.dart';
+import 'package:app_movie/common/helper/movie_helper.dart';
+import 'package:app_movie/common/utils/movie_type.dart';
 import 'package:app_movie/presentation/home/bloc/movie_cubit.dart';
 import 'package:app_movie/presentation/home/bloc/movie_state.dart';
 import 'package:app_movie/presentation/home/widget/movie_card.dart';
@@ -13,56 +14,24 @@ class ListMovie extends StatefulWidget {
 }
 
 class _ListMovieState extends State<ListMovie> {
-  late final Map<String, _MovieTypeData> movieTypes;
+  late final Map<MovieTypeConfig, MoviesCubit> _movieCubits;
 
   @override
   void initState() {
     super.initState();
-    movieTypes = {
-      'Phim Bộ': _MovieTypeData(
-        typeList: ApiUrl.typePhimBo,
-        cubit: MoviesCubit(),
-      ),
-      'Phim Lẻ': _MovieTypeData(
-        typeList: ApiUrl.typePhimLe,
-        cubit: MoviesCubit(),
-      ),
-      'TV Shows': _MovieTypeData(
-        typeList: ApiUrl.typeTvShows,
-        cubit: MoviesCubit(),
-      ),
-      'Hoạt Hình': _MovieTypeData(
-        typeList: ApiUrl.typeHoatHinh,
-        cubit: MoviesCubit(),
-      ),
-      'Phim Vietsub': _MovieTypeData(
-        typeList: ApiUrl.typePhimVietsub,
-        cubit: MoviesCubit(),
-      ),
-      'Phim Thuyết Minh': _MovieTypeData(
-        typeList: ApiUrl.typePhimThuyetMinh,
-        cubit: MoviesCubit(),
-      ),
-      'Phim Lồng Tiếng': _MovieTypeData(
-        typeList: ApiUrl.typePhimLongTieng,
-        cubit: MoviesCubit(),
-      ),
+    // Khởi tạo Cubit cho mỗi loại phim
+    _movieCubits = {
+      for (var config in movieTypesList)
+        config: MoviesCubit()
+          ..getMoviesByType(typeList: config.typeList, page: 1),
     };
-
-    // Load movies for each type
-    for (var data in movieTypes.values) {
-      _loadMoviesByType(data);
-    }
-  }
-
-  void _loadMoviesByType(_MovieTypeData data) async {
-    data.cubit.getMoviesByType(typeList: data.typeList, page: 1);
   }
 
   @override
   void dispose() {
-    for (var data in movieTypes.values) {
-      data.cubit.close();
+    // Đóng tất cả Cubit
+    for (var cubit in _movieCubits.values) {
+      cubit.close();
     }
     super.dispose();
   }
@@ -72,11 +41,10 @@ class _ListMovieState extends State<ListMovie> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          ...movieTypes.entries.map(
-            (entry) => _buildMovieSection(
-              title: entry.key,
-              cubit: entry.value.cubit,
-              typeList: entry.value.typeList,
+          ...movieTypesList.map(
+            (config) => _buildMovieSection(
+              config: config,
+              cubit: _movieCubits[config]!,
             ),
           ),
         ],
@@ -85,9 +53,8 @@ class _ListMovieState extends State<ListMovie> {
   }
 
   Widget _buildMovieSection({
-    required String title,
+    required MovieTypeConfig config,
     required MoviesCubit cubit,
-    required String typeList,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +66,7 @@ class _ListMovieState extends State<ListMovie> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                title,
+                config.title,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -108,12 +75,12 @@ class _ListMovieState extends State<ListMovie> {
               GestureDetector(
                 onTap: () {
                   // TODO: Navigate to full list page
-                  debugPrint('Xem thêm phim $typeList');
+                  debugPrint('Xem thêm phim ${config.typeList}');
                 },
                 child: Text(
                   'Xem thêm',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 16,
                     color: Colors.redAccent,
                     fontWeight: FontWeight.w500,
                   ),
@@ -130,17 +97,19 @@ class _ListMovieState extends State<ListMovie> {
             if (state is MoviesLoading) {
               return _buildLoadingShimmer();
             } else if (state is MoviesLoaded) {
-              // Lấy danh sách phim từ state
-              final movies = state.movies.isNotEmpty
-                  ? state.movies.first.items.take(10).toList()
-                  : [];
+              // Sử dụng helper để lọc & xử lý dữ liệu
+              final movies = MovieHelper.getMoviesByType(
+                state.movies,
+                config.typeList,
+                limit: 10,
+              );
 
               if (movies.isEmpty) {
                 return SizedBox(
                   height: 200,
                   child: Center(
                     child: Text(
-                      'Không có phim $title',
+                      'Không có phim ${config.title}',
                       style: const TextStyle(color: Colors.grey, fontSize: 14),
                     ),
                   ),
@@ -226,11 +195,4 @@ class _ListMovieState extends State<ListMovie> {
       ),
     );
   }
-}
-
-class _MovieTypeData {
-  final String typeList;
-  final MoviesCubit cubit;
-
-  _MovieTypeData({required this.typeList, required this.cubit});
 }

@@ -1,3 +1,4 @@
+import 'package:app_movie/domain/movie/entities/movie.dart';
 import 'package:app_movie/domain/movie/usecases/get_movies.dart';
 import 'package:app_movie/domain/movie/usecases/get_movies_by_type.dart';
 import 'package:app_movie/presentation/home/bloc/movie_state.dart';
@@ -15,11 +16,17 @@ class MoviesCubit extends Cubit<MoviesState> {
     moviesData.fold(
       (error) => emit(FailureLoadMovies(errorMessage: error.toString())),
       (data) {
+        // Extract MovieItemEntity từ List<MovieEntity>
+        final List<MovieEntity> movieEntities = data;
+        final List<MovieItemEntity> movieItems = movieEntities
+            .expand((page) => page.items)
+            .toList();
+
         if (loadMore && state is MoviesLoaded) {
           final current = (state as MoviesLoaded).movies;
-          emit(MoviesLoaded(movies: [...current, ...data]));
+          emit(MoviesLoaded(movies: [...current, ...movieItems]));
         } else {
-          emit(MoviesLoaded(movies: data));
+          emit(MoviesLoaded(movies: movieItems));
         }
         _page++;
       },
@@ -32,17 +39,23 @@ class MoviesCubit extends Cubit<MoviesState> {
     bool loadMore = false,
   }) async {
     if (!loadMore) emit(MoviesLoading());
-    var moviesData = await sl<GetMoviesByTypeUseCase>().call(
+    final moviesData = await sl<GetMoviesByTypeUseCase>().call(
       params: GetMoviesByTypeParams(typeList: typeList, page: page),
     );
     moviesData.fold(
       (error) => emit(FailureLoadMovies(errorMessage: error.toString())),
       (data) {
+        // Extract MovieItemEntity từ List<MovieEntity>
+        final List<MovieEntity> movieEntities = data;
+        final List<MovieItemEntity> movieItems = movieEntities
+            .expand((page) => page.items)
+            .toList();
+
         if (loadMore && state is MoviesLoaded) {
           final current = (state as MoviesLoaded).movies;
-          emit(MoviesLoaded(movies: [...current, ...data]));
+          emit(MoviesLoaded(movies: [...current, ...movieItems]));
         } else {
-          emit(MoviesLoaded(movies: data));
+          emit(MoviesLoaded(movies: movieItems));
         }
       },
     );
