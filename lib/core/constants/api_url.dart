@@ -1,6 +1,10 @@
 class ApiUrl {
   static const baseURL = 'https://phimapi.com/';
 
+  // ==================== CDN ====================
+  /// CDN cho hình ảnh (poster, thumb)
+  static const imageCDN = 'https://phimimg.com/';
+
   // ==================== DANH SÁCH PHIM ====================
   /// GET https://phimapi.com/danh-sach/phim-moi-cap-nhat-v3?page={page}
   static const movie = 'danh-sach/phim-moi-cap-nhat-v3';
@@ -14,7 +18,6 @@ class ApiUrl {
   /// Thông tin Phim & Danh sách tập phim
   /// GET https://phimapi.com/phim/{slug}
   static const movieDetail = 'phim/{slug}';
-  static const nowPlayingMovies = movieDetail; // Legacy support
 
   /// Thông tin dựa theo TMDB ID
   /// GET https://phimapi.com/tmdb/{type}/{id}
@@ -94,4 +97,12 @@ class ApiUrl {
 
   /// Limit max
   static const maxLimit = 64;
+
+  // ==================== HELPER METHODS ====================
+  /// Build full image URL từ relative path
+  static String getImageUrl(String? relativePath) {
+    if (relativePath == null || relativePath.isEmpty) return '';
+    if (relativePath.startsWith('http')) return relativePath;
+    return '$imageCDN$relativePath';
+  }
 }
